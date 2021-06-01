@@ -1,0 +1,16 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#include "ui/base/idle/idle_internal.h"
+
+#include "base/no_destructor.h"
+
+namespace ui {
+
+absl::optional<IdleState>& IdleStateForTesting() {
+  static base::NoDestructor<absl::optional<IdleState>> idle_state;
+  return *idle_state;
+}
+
+}  // namespace ui

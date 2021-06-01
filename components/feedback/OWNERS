@@ -1,0 +1,12 @@
+# Primary OWNERS
+jimmyxgong@chromium.org
+joonbug@chromium.org
+
+# Backup OWNERS
+zentaro@chromium.org
+afakhry@chromium.org
+iby@chromium.org
+mutexlox@chromium.org
+
+per-file redaction_tool*=iby@chromium.org
+per-file redaction_tool*=mutexlox@chromium.org

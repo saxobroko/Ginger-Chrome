@@ -1,0 +1,150 @@
+// Copyright 2018 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef CHROME_BROWSER_WEB_APPLICATIONS_WEB_APP_ICON_MANAGER_H_
+#define CHROME_BROWSER_WEB_APPLICATIONS_WEB_APP_ICON_MANAGER_H_
+
+#include <map>
+#include <memory>
+#include <vector>
+
+#include "base/callback.h"
+#include "base/files/file_path.h"
+#include "base/memory/weak_ptr.h"
+#include "base/scoped_observation.h"
+#include "chrome/browser/web_applications/components/app_icon_manager.h"
+#include "chrome/browser/web_applications/components/app_registrar.h"
+#include "chrome/browser/web_applications/components/app_registrar_observer.h"
+#include "chrome/browser/web_applications/components/web_application_info.h"
+#include "third_party/abseil-cpp/absl/types/optional.h"
+#include "third_party/skia/include/core/SkBitmap.h"
+#include "ui/gfx/image/image_skia.h"
+
+class Profile;
+
+namespace web_app {
+
+class FileUtilsWrapper;
+class WebAppRegistrar;
+
+using SquareSizeDip = int;
+
+// Exclusively used from the UI thread.
+class WebAppIconManager : public AppIconManager, public AppRegistrarObserver {
+ public:
+  using FaviconReadCallback =
+      base::RepeatingCallback<void(const AppId& app_id)>;
+  using ReadImageSkiaCallback =
+      base::OnceCallback<void(gfx::ImageSkia image_skia)>;
+
+  WebAppIconManager(Profile* profile,
+                    WebAppRegistrar& registrar,
+                    std::unique_ptr<FileUtilsWrapper> utils);
+  WebAppIconManager(const WebAppIconManager&) = delete;
+  WebAppIconManager& operator=(const WebAppIconManager&) = delete;
+  ~WebAppIconManager() override;
+
+  using WriteDataCallback = base::OnceCallback<void(bool success)>;
+
+  // Writes all data (icons) for an app.
+  void WriteData(AppId app_id,
+                 IconBitmaps icon_bitmaps,
+                 WriteDataCallback callback);
+  void WriteShortcutsMenuIconsData(
+      AppId app_id,
+      ShortcutsMenuIconBitmaps shortcuts_menu_icons,
+      WriteDataCallback callback);
+  void DeleteData(AppId app_id, WriteDataCallback callback);
+
+  // AppIconManager:
+  WebAppIconManager* AsWebAppIconManager() override;
+  void Start() override;
+  void Shutdown() override;
+  bool HasIcons(const AppId& app_id,
+                IconPurpose purpose,
+                const SortedSizesPx& icon_sizes) const override;
+  absl::optional<IconSizeAndPurpose> FindIconMatchBigger(
+      const AppId& app_id,
+      const std::vector<IconPurpose>& purposes,
+      SquareSizePx min_size) const override;
+  bool HasSmallestIcon(const AppId& app_id,
+                       const std::vector<IconPurpose>& purposes,
+                       SquareSizePx min_size) const override;
+  void ReadIcons(const AppId& app_id,
+                 IconPurpose purpose,
+                 const SortedSizesPx& icon_sizes,
+                 ReadIconsCallback callback) const override;
+  void ReadAllIcons(const AppId& app_id,
+                    ReadIconBitmapsCallback callback) const override;
+  void ReadAllShortcutsMenuIcons(
+      const AppId& app_id,
+      ReadShortcutsMenuIconsCallback callback) const override;
+  void ReadSmallestIcon(const AppId& app_id,
+                        const std::vector<IconPurpose>& purposes,
+                        SquareSizePx min_size_in_px,
+                        ReadIconWithPurposeCallback callback) const override;
+  void ReadSmallestCompressedIcon(
+      const AppId& app_id,
+      const std::vector<IconPurpose>& purposes,
+      SquareSizePx min_size_in_px,
+      ReadCompressedIconWithPurposeCallback callback) const override;
+  SkBitmap GetFavicon(const AppId& app_id) const override;
+
+  gfx::ImageSkia GetFaviconImageSkia(const AppId& app_id) const;
+
+  // AppRegistrarObserver:
+  void OnWebAppInstalled(const AppId& app_id) override;
+  void OnAppRegistrarDestroyed() override;
+
+  // Calls back with an icon of the |desired_icon_size| and |purpose|, resizing
+  // an icon of a different size if necessary. If no icons were available, calls
+  // back with an empty map. Prefers resizing a large icon smaller over resizing
+  // a small icon larger.
+  void ReadIconAndResize(const AppId& app_id,
+                         IconPurpose purpose,
+                         SquareSizePx desired_icon_size,
+                         ReadIconsCallback callback) const;
+
+  // Reads multiple densities of the icon for each supported UI scale factor.
+  // See ui/base/layout.h. Returns null image in |callback| if no icons found
+  // for all supported UI scale factors (matches only bigger icons, no
+  // upscaling).
+  void ReadUiScaleFactorsIcons(const AppId& app_id,
+                               SquareSizeDip size_in_dip,
+                               ReadImageSkiaCallback callback);
+
+  void SetFaviconReadCallbackForTesting(FaviconReadCallback callback);
+
+ private:
+  absl::optional<IconSizeAndPurpose> FindIconMatchSmaller(
+      const AppId& app_id,
+      const std::vector<IconPurpose>& purposes,
+      SquareSizePx max_size) const;
+
+  void OnReadUiScaleFactorsIcons(SquareSizeDip size_in_dip,
+                                 ReadImageSkiaCallback callback,
+                                 std::map<SquareSizePx, SkBitmap> icon_bitmaps);
+
+  void ReadFavicon(const AppId& app_id);
+  void OnReadFavicon(const AppId& app_id, gfx::ImageSkia image_skia);
+
+  WebAppRegistrar& registrar_;
+  base::FilePath web_apps_directory_;
+  std::unique_ptr<FileUtilsWrapper> utils_;
+
+  base::ScopedObservation<AppRegistrar, AppRegistrarObserver>
+      registrar_observation_{this};
+
+  // We cache different densities for high-DPI displays per each app.
+  std::map<AppId, gfx::ImageSkia> favicon_cache_;
+
+  FaviconReadCallback favicon_read_callback_;
+
+  base::WeakPtrFactory<WebAppIconManager> weak_ptr_factory_{this};
+
+};
+
+}  // namespace web_app
+
+#endif  // CHROME_BROWSER_WEB_APPLICATIONS_WEB_APP_ICON_MANAGER_H_

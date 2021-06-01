@@ -1,0 +1,62 @@
+// Copyright 2018 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef COMPONENTS_SEARCH_NTP_FEATURES_H_
+#define COMPONENTS_SEARCH_NTP_FEATURES_H_
+
+#include "base/feature_list.h"
+
+namespace base {
+class TimeDelta;
+}  // namespace base
+
+namespace ntp_features {
+
+// The features should be documented alongside the definition of their values in
+// the .cc file.
+
+extern const base::Feature kConfirmSuggestionRemovals;
+extern const base::Feature kCacheOneGoogleBar;
+extern const base::Feature kDismissPromos;
+extern const base::Feature kIframeOneGoogleBar;
+extern const base::Feature kNtpRepeatableQueries;
+extern const base::Feature kOneGoogleBarModalOverlays;
+extern const base::Feature kRealboxMatchOmniboxTheme;
+extern const base::Feature kRealboxUseGoogleGIcon;
+extern const base::Feature kNtpLogo;
+extern const base::Feature kNtpShortcuts;
+extern const base::Feature kNtpMiddleSlotPromo;
+extern const base::Feature kModules;
+extern const base::Feature kNtpModulesLoad;
+extern const base::Feature kNtpRecipeTasksModule;
+extern const base::Feature kNtpShoppingTasksModule;
+extern const base::Feature kNtpChromeCartModule;
+extern const base::Feature kNtpDriveModule;
+extern const base::Feature kSearchSuggestChips;
+extern const base::Feature kDisableSearchSuggestChips;
+
+extern const base::Feature kNtpHandleMostVisitedNavigationExplicitly;
+
+// Parameter determining the module load timeout.
+extern const char kNtpModulesLoadTimeoutMillisecondsParam[];
+// Parameter determining the type of shopping data to request.
+extern const char kNtpShoppingTasksModuleDataParam[];
+// Parameter determining the type of recipe data to request.
+extern const char kNtpRecipeTasksModuleDataParam[];
+// Parameter determining the type of cart data used to render module.
+extern const char kNtpChromeCartModuleDataParam[];
+// Parameter for enabling the abandoned cart discount.
+extern const char kNtpChromeCartModuleAbandonedCartDiscountParam[];
+// Parameter for enabling the cart heuristics improvement.
+extern const char kNtpChromeCartModuleHeuristicsImprovementParam[];
+// Parameter determining the type of Drive data to render.
+extern const char kNtpDriveModuleDataParam[];
+// Parameter for enabling the Drive module for managed users only.
+extern const char kNtpDriveModuleManagedUsersOnlyParam[];
+
+// Returns the timeout after which the load of a module should be aborted.
+base::TimeDelta GetModulesLoadTimeout();
+}  // namespace ntp_features
+
+#endif  // COMPONENTS_SEARCH_NTP_FEATURES_H_

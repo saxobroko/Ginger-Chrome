@@ -1,0 +1,25 @@
+// Copyright 2017 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Zip file creator provided by the utility process and exposed by mojo
+// policy control to the Chrome browser process on OS_CHROMEOS.
+
+module chrome.mojom;
+
+import "components/services/filesystem/public/mojom/directory.mojom";
+import "mojo/public/mojom/base/file.mojom";
+import "mojo/public/mojom/base/file_path.mojom";
+
+// Service that zips files and folders.
+interface ZipFileCreator {
+  // Creates a ZIP file and adds all the files and directories specified in
+  // |source_relative_paths|.
+  // Folders are recursively explored.
+  // If |source_relative_paths| is empty, then the whole source directory is
+  // zipped.
+  CreateZipFile(pending_remote<filesystem.mojom.Directory> source_dir_mojo,
+                array<mojo_base.mojom.FilePath> source_relative_paths,
+                mojo_base.mojom.File zip_file)
+      => (bool success);
+};

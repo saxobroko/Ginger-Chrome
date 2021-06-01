@@ -1,0 +1,51 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef CONTENT_BROWSER_SPECULATION_RULES_SPECULATION_HOST_IMPL_H_
+#define CONTENT_BROWSER_SPECULATION_RULES_SPECULATION_HOST_IMPL_H_
+
+#include <vector>
+
+#include "content/common/content_export.h"
+#include "content/public/browser/frame_service_base.h"
+#include "content/public/browser/speculation_host_delegate.h"
+#include "mojo/public/cpp/bindings/pending_receiver.h"
+#include "third_party/blink/public/mojom/speculation_rules/speculation_rules.mojom.h"
+
+namespace content {
+class RenderFrameHost;
+class PrerenderProcessor;
+
+// Receiver for speculation rules from the web platform. See
+// third_party/blink/renderer/core/speculation_rules/README.md
+class CONTENT_EXPORT SpeculationHostImpl final
+    : public content::FrameServiceBase<blink::mojom::SpeculationHost> {
+ public:
+  // Creates and binds an instance of this per-frame.
+  static void Bind(
+      RenderFrameHost* frame_host,
+      mojo::PendingReceiver<blink::mojom::SpeculationHost> receiver);
+
+  ~SpeculationHostImpl() override;
+
+  SpeculationHostImpl(const SpeculationHostImpl&) = delete;
+  SpeculationHostImpl& operator=(const SpeculationHostImpl&) = delete;
+  SpeculationHostImpl(SpeculationHostImpl&&) = delete;
+  SpeculationHostImpl& operator=(SpeculationHostImpl&&) = delete;
+
+ private:
+  SpeculationHostImpl(
+      RenderFrameHost* frame_host,
+      mojo::PendingReceiver<blink::mojom::SpeculationHost> receiver);
+
+  void UpdateSpeculationCandidates(
+      std::vector<blink::mojom::SpeculationCandidatePtr> candidates) override;
+
+  std::unique_ptr<SpeculationHostDelegate> delegate_;
+  std::unique_ptr<PrerenderProcessor> prerender_processor_;
+};
+
+}  // namespace content
+
+#endif  // CONTENT_BROWSER_SPECULATION_RULES_SPECULATION_HOST_IMPL_H_

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+  <title>WebRTC Automated Test</title>
+  <script type="text/javascript" src="test_functions.js"></script>
+  <script type="text/javascript" src="video_detector.js"></script>
+  <script type="text/javascript" src="indexeddb.js"></script>
+  <script>
+  'use strict';
+  var settings;
+  var video_track;
+  var has_audio_track = false;
+
+  function handleSuccess(stream) {
+    has_audio_track = stream.getAudioTracks().length == 1;
+    settings = stream.getVideoTracks()[0].getSettings();
+    var video = document.querySelector('video');
+    video.srcObject = stream;
+    video_track = stream.getVideoTracks()[0];
+    video.play();
+    returnToTest("capture-success");
+  }
+
+  function handleError(error) {
+    console.log('getUserMedia error: ' + error.name, error);
+    returnToTest("capture-failure");
+  }
+
+  function runTestedFunction(testedFunction, constraints) {
+    if (testedFunction == "getDisplayMedia") {
+      navigator.mediaDevices.getDisplayMedia(constraints).
+        then(handleSuccess).catch(handleError);
+    } else if (testedFunction == "getCurrentBrowsingContextMedia") {
+      navigator.mediaDevices.getCurrentBrowsingContextMedia(constraints).
+        then(handleSuccess).catch(handleError);
+    } else {
+      returnToTest("Unexpected test fixture error - unknown function.");
+    }
+  }
+
+  function hasAudioTrack() {
+    returnToTest(has_audio_track ? "true" : "false");
+  }
+
+  function getDisplaySurfaceSetting() {
+    returnToTest(settings.displaySurface);
+  }
+
+  function getLogicalSurfaceSetting() {
+    returnToTest(settings.logicalSurface ? "true" : "false");
+  }
+
+  function getCursorSetting() {
+    returnToTest(settings.cursor);
+  }
+
+  function getWidthSetting() {
+    returnToTest(settings.width.toString());
+  }
+
+  function getFrameRateSetting() {
+    returnToTest(settings.frameRate.toString());
+  }
+
+  function waitVideoMuted() {
+    if (video_track.muted) {
+      returnToTest("muted");
+    }
+    video_track.onmute = function(evt) {
+      returnToTest("muted");
+    }
+  }
+
+  function waitVideoUnmuted() {
+    if (!video_track.muted) {
+      returnToTest("unmuted");
+    }
+    video_track.onunmute = function(evt) {
+      returnToTest("unmuted");
+    }
+  }
+  </script>
+</head>
+<body>
+  <table border="0">
+    <tr>
+      <td>getdisplayMedia() output</td>
+    </tr>
+    <tr>
+      <td>
+        <video id="local-view" autoplay="autoplay"></video>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+
