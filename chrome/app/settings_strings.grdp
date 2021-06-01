@@ -27,7 +27,7 @@
   </if>
   <if expr="is_macosx">
     <message name="IDS_ABOUT_CHROME_AUTOUPDATE_ALL" desc="The 'Automatically update Chrome for all users.' button in the About window.  Mac-only.">
-      Automatically update Chrome for all users
+      Automatically update Ginger Chrome for all users
     </message>
     <message name="IDS_ABOUT_CHROME_AUTOUPDATE_ALL_IS_ON" desc="The text in About Page to indicate automatic update is turned on.  Mac-only.">
       Automatic updates are turned on
@@ -51,17 +51,17 @@
     Get image descriptions from Google
   </message>
   <message name="IDS_SETTINGS_ACCESSIBLE_IMAGE_LABELS_SUBTITLE" desc="Subtitle for screen reader image labels feature.">
-    If an image doesn’t have a useful description, Chrome will try to provide one for you. To create descriptions, images are sent to Google.
+    If an image doesn’t have a useful description, Ginger Chrome will try to provide one for you. To create descriptions, images are sent to Google.
   </message>
   <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_TITLE" desc="Name of the setting to enable Live Caption feature.">
     Live Caption
   </message>
   <if expr="chromeos">
     <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_SUBTITLE_ENGLISH_ONLY" desc="Description text for Live Caption feature. When audio or video is playing, the user will see captions on the screen. Only works in Chrome browser initially. Currently only works for English media.">
-      Automatically creates captions for media in Chrome browser (currently available in English). Audio and captions are processed locally and never leave the device.
+      Automatically creates captions for media in Ginger Chrome browser (currently available in English). Audio and captions are processed locally and never leave the device.
     </message>
     <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_SUBTITLE" desc="Description text for Live Caption feature. When audio or video is playing, the user will see captions on the screen. Only works in Chrome browser initially.">
-      Automatically creates captions for media in Chrome browser. Audio and captions are processed locally and never leave the device.
+      Automatically creates captions for media in Ginger Chrome browser. Audio and captions are processed locally and never leave the device.
     </message>
   </if>
   <if expr="not chromeos">
@@ -192,13 +192,13 @@
     Search settings
   </message>
   <message name="IDS_SETTINGS_SEARCH_NO_RESULTS_HELP" desc="Help text for a search that has no results.">
-    Go to <ph name="BEGIN_LINK_CHROMIUM">&lt;a target="_blank" href="$1"&gt;</ph>Google Chrome help<ph name="END_LINK_CHROMIUM">&lt;/a&gt;</ph> if you can't find what you're looking for
+    Go to <ph name="BEGIN_LINK_CHROMIUM">&lt;a target="_blank" href="$1"&gt;</ph>Ginger Chrome help<ph name="END_LINK_CHROMIUM">&lt;/a&gt;</ph> if you can't find what you're looking for
   </message>
   <message name="IDS_SETTINGS_SETTINGS" desc="The settings page title.">
     Settings
   </message>
   <message name="IDS_SETTINGS_ALT_PAGE_TITLE" desc="The settings page title for the about page.">
-    Settings - <ph name="SECTION_TITLE">$1<ex>About Chromium</ex></ph>
+    Settings - <ph name="SECTION_TITLE">$1<ex>About Ginger Chrome</ex></ph>
   </message>
   <message name="IDS_SETTINGS_SUBPAGE_BUTTON" desc="Accessibility description for a button navigating the user from a settings page to one of the settings subpages.">
     Subpage button
@@ -1381,7 +1381,7 @@
     Passwords
   </message>
   <message name="IDS_SETTINGS_SAFETY_CHECK_PASSWORDS_FEATURE_UNAVAILABLE" desc="Explains that the password check feature is not available in this version of the browser.">
-    Password check is not available in Chromium
+    Password check is not available in Ginger Chrome
   </message>
   <message name="IDS_SETTINGS_SAFETY_CHECK_PASSWORDS_BUTTON_ARIA_LABEL" desc="Accessibility text for the button that allows users to review their passwords.">
     Review passwords

@@ -96,7 +96,7 @@
 
   <!-- Landing view -->
   <message name="IDS_WELCOME_LANDING_TITLE" desc="Title for the page that prompts user to start setting up their new Chrome.">
-    Make Chrome your own
+    Make Ginger Chrome your own
   </message>
   <message name="IDS_WELCOME_LANDING_DESCRIPTION" desc="Description for the page that prompts user to start setting up their new Chrome.">
     Set up your browser in a few simple steps
