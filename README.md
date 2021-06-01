@@ -1,6 +1,5 @@
 Ginger-Chrome
 
-=======
 # ![Logo](chrome/app/theme/chromium/product_logo_64.png) Chromium
 
 Chromium is an open-source browser project that aims to build a safer, faster,
@@ -20,4 +19,3 @@ For historical reasons, there are some small top level directories. Now the
 guidance is that new top level directories are for product (e.g. Chrome,
 Android WebView, Ash). Even if these products have multiple executables, the
 code should be in subdirectories of the product.
->>>>>>> 287d917d91 (SVG Text NG: Support additional FontBaseline types in FontMetrics)
